@@ -3,10 +3,9 @@
 AUTOPAIR_INHIBIT_INIT=${AUTOPAIR_INHIBIT_INIT:-}
 AUTOPAIR_BETWEEN_WHITESPACE=${AUTOPAIR_BETWEEN_WHITESPACE:-}
 AUTOPAIR_SPC_WIDGET=${AUTOPAIR_SPC_WIDGET:-"$(bindkey " " | cut -c5-)"}
-AUTOPAIR_BKSPC_WIDGET=${AUTOPAIR_BKSPC_WIDGET:-"$(bindkey "^?" | cut -c6-)"}
 
 typeset -gA AUTOPAIR_PAIRS
-AUTOPAIR_PAIRS=('`' '`' "'" "'" '"' '"' '{' '}' '[' ']' '(' ')' ' ' ' ')
+AUTOPAIR_PAIRS+=('`' '`' "'" "'" '"' '"' '{' '}' '[' ']' '(' ')' ' ' ' ')
 
 typeset -gA AUTOPAIR_LBOUNDS
 AUTOPAIR_LBOUNDS=(all '[.:/\!]')
@@ -18,7 +17,7 @@ AUTOPAIR_LBOUNDS+=('"' '"')
 AUTOPAIR_LBOUNDS+=("'" "'")
 
 typeset -gA AUTOPAIR_RBOUNDS
-AUTOPAIR_RBOUNDS=(all '[[{(<,.:?/%$!a-zA-Z0-9]')
+AUTOPAIR_RBOUNDS+=(all '[[{(<,.:?/%$!a-zA-Z0-9]')
 AUTOPAIR_RBOUNDS+=(quotes '[a-zA-Z0-9]')
 AUTOPAIR_RBOUNDS+=(spaces '[^]})]')
 AUTOPAIR_RBOUNDS+=(braces '')
@@ -187,9 +186,8 @@ autopair-close() {
 
 autopair-delete() {
     _ap-can-delete-p && RBUFFER=${RBUFFER:1}
-    zle ${AUTOPAIR_BKSPC_WIDGET:-backward-delete-char}
+    zle backward-delete-char
 }
-
 
 ### Initialization #####################
 
@@ -211,8 +209,6 @@ autopair-init() {
     done
 
     bindkey "^?" autopair-delete
-    bindkey "^h" autopair-delete
     bindkey -M isearch "^?" backward-delete-char
-    bindkey -M isearch "^h" backward-delete-char
 }
 [[ -n $AUTOPAIR_INHIBIT_INIT ]] || autopair-init
